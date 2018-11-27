@@ -1,0 +1,138 @@
+---
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: 1.0.0
+  title: Swagger REST Article
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /api
+
+paths:
+  /todo:
+    get:
+      operationId: todo.read_all
+      tags:
+        - TODO
+      summary: The TODO data structure supported by the server application
+      description: Read the list of TODO
+      responses:
+        200:
+          description: Successful read TODO list operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entry'
+    post:
+      operationId: todo.create
+      tags:
+        - TODO
+      summary: Create an entry and add it to the TODO list
+      description: Create a new entry in the TODO list
+      parameters:
+        - in: body
+          name: entry
+          description: Entry to add
+          required: true
+          schema:
+            type: object
+            required:
+              - title
+              - body
+            properties:
+              title:
+                type: string
+              body:
+                type: string
+      responses:
+        201:
+          description: Successfully created entry in TODO list
+        405:
+          description: Invalid input
+  /todo/{entryId}:
+    get:
+      operationId: todo.read_one
+      tags:
+        - TODO
+      summary: Read one entry from the TODO list
+      description: Read one entry from the TODO list
+      parameters:
+        - name: entryId
+          in: path
+          description: ID of the entry to get from the list
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successfully read entry from TODO list
+          schema:
+            $ref: '#/definitions/Entry'
+    put:
+      operationId: todo.update
+      tags:
+        - TODO
+      summary: Update an entry in the TODO list
+      description: Update an entry in the TODO list
+      parameters:
+        - in: path
+          name: entryId
+          description: ID of the entry to get from the TODO list
+          type: string
+          required: true
+        - in: body
+          name: entry
+          description: Entry object that needs to be updated
+          required: true
+          schema:
+            type: object
+            required:
+              - title
+              - body
+              - completed
+            properties:
+              title:
+                type: string
+              body:
+                type: string
+              completed:
+                type: string
+                enum:
+                  - pending
+                  - completed
+      responses:
+        200:
+          description: Successfully updated entry in TODO list
+    delete:
+      operationId: todo.delete
+      tags:
+        - TODO
+      summary: Delete an entry from the TODO list
+      description: Delete an entry
+      parameters:
+        - name: entryId
+          in: path
+          description: ID of the entry to get from the TODO list
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successfully deleted an entry from TODO list
+definitions:
+  Entry:
+    type: object
+    properties:
+      entryId:
+        type: string
+      title:
+        type: string
+      body:
+        type: string
+      completed:
+        type: string
+        enum:
+        - pending
+        - completed
+
